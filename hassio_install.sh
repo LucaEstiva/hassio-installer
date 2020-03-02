@@ -16,7 +16,7 @@ URL_SERVICE_APPARMOR="https://raw.githubusercontent.com/home-assistant/hassio-in
 URL_APPARMOR_PROFILE="https://version.home-assistant.io/apparmor.txt"
 
 # Check env
-command -v systemctl > /dev/null 2>&1 || error "Only systemd is supported!"
+# command -v systemctl > /dev/null 2>&1 || error "Only systemd is supported!"
 command -v docker > /dev/null 2>&1 || error "Please install docker first"
 command -v jq > /dev/null 2>&1 || error "Please install jq first"
 command -v curl > /dev/null 2>&1 || error "Please install curl first"
