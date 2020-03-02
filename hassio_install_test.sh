@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# set -e
 
 function error { echo -e "[Error] $*"; exit 1; }
 function warn  { echo -e "[Warning] $*"; }
