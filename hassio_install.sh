@@ -27,9 +27,9 @@ command -v apparmor_parser > /dev/null 2>&1 || warn "No AppArmor support on host
 
 
 # Check if Modem Manager is enabled
-if systemctl list-unit-files ModemManager.service | grep enabled; then
-    warn "ModemManager service is enabled. This might cause issue when using serial devices."
-fi
+#if systemctl list-unit-files ModemManager.service | grep enabled; then
+#    warn "ModemManager service is enabled. This might cause issue when using serial devices."
+#fi
 
 # Detect if running on snapped docker
 if snap list docker >/dev/null 2>&1; then
@@ -157,7 +157,7 @@ sed -i -e "s,%%DOCKER_BINARY%%,${DOCKER_BINARY},g" \
        "${SYSCONFDIR}"/systemd/system/hassio-supervisor.service
 
 chmod a+x "${PREFIX}"/sbin/hassio-supervisor
-systemctl enable hassio-supervisor.service
+rc-update add hassio-supervisor.service default
 
 #
 # Install Hass.io AppArmor
@@ -174,11 +174,11 @@ if command -v apparmor_parser > /dev/null 2>&1; then
 	   "${SYSCONFDIR}"/systemd/system/hassio-apparmor.service
 
     chmod a+x "${PREFIX}"/sbin/hassio-apparmor
-    systemctl enable hassio-apparmor.service
-    systemctl start hassio-apparmor.service
+	rc-update add hassio-apparmor.service default
+	rc-service hassio-apparmor.service start
 fi
 
 ##
 # Init system
 echo "[Info] Run Hass.io"
-systemctl start hassio-supervisor.service
+rc-service hassio-supervisor.service start
