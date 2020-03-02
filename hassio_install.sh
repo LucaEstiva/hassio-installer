@@ -16,7 +16,7 @@ URL_SERVICE_APPARMOR="https://raw.githubusercontent.com/home-assistant/hassio-in
 URL_APPARMOR_PROFILE="https://version.home-assistant.io/apparmor.txt"
 
 # Check env
-# command -v systemctl > /dev/null 2>&1 || error "Only systemd is supported!"
+#command -v systemctl > /dev/null 2>&1 || error "Only systemd is supported!"
 command -v docker > /dev/null 2>&1 || error "Please install docker first"
 command -v jq > /dev/null 2>&1 || error "Please install jq first"
 command -v curl > /dev/null 2>&1 || error "Please install curl first"
@@ -28,7 +28,7 @@ command -v apparmor_parser > /dev/null 2>&1 || warn "No AppArmor support on host
 
 # Check if Modem Manager is enabled
 #if systemctl list-unit-files ModemManager.service | grep enabled; then
-#    warn "ModemManager service is enabled. This might cause issue when using serial devices."
+    #warn "ModemManager service is enabled. This might cause issue when using serial devices."
 #fi
 
 # Detect if running on snapped docker
@@ -157,7 +157,11 @@ sed -i -e "s,%%DOCKER_BINARY%%,${DOCKER_BINARY},g" \
        "${SYSCONFDIR}"/systemd/system/hassio-supervisor.service
 
 chmod a+x "${PREFIX}"/sbin/hassio-supervisor
+# Enable service at startup
+# rc-update add <service> <runlevel> default
 rc-update add hassio-supervisor.service default
+# systemctl enable <service>
+#systemctl enable hassio-supervisor.service
 
 #
 # Install Hass.io AppArmor
@@ -176,9 +180,17 @@ if command -v apparmor_parser > /dev/null 2>&1; then
     chmod a+x "${PREFIX}"/sbin/hassio-apparmor
 	rc-update add hassio-apparmor.service default
 	rc-service hassio-apparmor.service start
+	
+    #systemctl enable hassio-apparmor.service
+    #systemctl start hassio-apparmor.service
 fi
 
 ##
 # Init system
 echo "[Info] Run Hass.io"
+#Start a service
+#/etc/init.d/<service> start 
+#rc-service <service> start
+#systemctl start <service>
+#systemctl start hassio-supervisor.service
 rc-service hassio-supervisor.service start
